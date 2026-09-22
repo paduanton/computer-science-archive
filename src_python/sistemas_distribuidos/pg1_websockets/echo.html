@@ -1,49 +1,80 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Aula 15 WebSockets</title>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Echo | PG1 WebSockets</title>
+  <style>
+    body { font: 17px system-ui, sans-serif; margin: 40px auto; padding: 0 24px; max-width: 760px; color: #18252f; background: #f7f9fb; }
+    main { background: white; border: 1px solid #d7dfe5; border-radius: 8px; padding: 24px; }
+    h1 { margin: 0 0 12px; }
+    label { display: block; margin-bottom: 6px; }
+    input { width: 95%; padding: 10px; font: inherit; margin-bottom: 12px; }
+    button { font: inherit; padding: 8px 14px; margin: 0 8px 8px 0; cursor: pointer; }
+    button:disabled { cursor: default; }
+    #area { min-height: 140px; padding-left: 24px; overflow-wrap: anywhere; }
+    li { padding: 5px 0; white-space: pre-wrap; }
+    #status { font-weight: 600; }
+    small { color: #455a64; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Echo com WebSockets</h1>
+  <p>Cada mensagem enviada retorna somente para esta conexÃ£o.</p>
+  <p>Estado: <span id="status" role="status">Conectando...</span></p>
+  <form id="form">
+    <label for="msg">Mensagem</label>
+    <input id="msg" type="text" autocomplete="off" placeholder="Digite sua mensagem">
+    <button id="enviar" type="submit" disabled>Enviar</button>
+    <button id="close" type="button" disabled>Fechar</button>
+    <button id="reconnect" type="button" disabled>Reconectar</button>
+  </form>
+  <h2>Mensagens recebidas</h2>
+  <ul id="area" aria-live="polite"></ul>
+  <small>PG1 Â· Sistemas DistribuÃ­dos Â· <a href="/ui-chat">Abrir chat</a></small>
+</main>
+<script>
+  const area = document.getElementById("area");
+  const msg = document.getElementById("msg");
+  const status = document.getElementById("status");
+  const enviar = document.getElementById("enviar");
+  const fechar = document.getElementById("close");
+  const reconectar = document.getElementById("reconnect");
+  let ws;
 
-  </head>
-  <body>
-    Echo Client</br>
-
-    <input id="msg" type="text" />
-    <button id="echo">Enviar</button>
-    <button id="close">Fechar</button>
-    <ul id="area"></ul>
-  </body>
-    <script>
-    var area = document.getElementById("area");
-    var msg = document.getElementById("msg");
-
-    //Definição do path utilizado pelo ServerEndpoint
-    var ws = new WebSocket("ws://localhost:8080/echo");
-
-    ws.onopen = function(event) {
-        console.log(event);
+  function conectar() {
+    status.textContent = "Conectando...";
+    enviar.disabled = fechar.disabled = reconectar.disabled = true;
+    const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+    ws = new WebSocket(protocol + "//" + location.host + "/echo");
+    ws.onopen = () => {
+      status.textContent = "Conectado";
+      enviar.disabled = fechar.disabled = false;
+      msg.focus();
     };
-
-    ws.onclose = function(event) {
-        console.log(event);
+    ws.onmessage = (event) => {
+      const entry = document.createElement("li");
+      entry.textContent = event.data;
+      area.appendChild(entry);
     };
-
-    ws.onmessage = function(event) {
-        console.log(event);
-        var entry = document.createElement("li");
-        entry.textContent = event.data;
-        area.appendChild(entry);
-    }
-
-    ws.onerror = function(event) {
-        console.log(event);
-    }
-
-    document.getElementById("echo").onclick = function() {
-        ws.send(msg.value);
+    ws.onclose = () => {
+      status.textContent = "Desconectado";
+      enviar.disabled = fechar.disabled = true;
+      reconectar.disabled = false;
     };
-
-    document.getElementById("close").onclick = function() {
-        ws.close();
-    };
-    </script>
+    ws.onerror = () => { status.textContent = "Falha na conexÃ£o. Verifique o servidor."; };
+  }
+  document.getElementById("form").onsubmit = (event) => {
+    event.preventDefault();
+    if (ws.readyState !== WebSocket.OPEN || !msg.value.trim()) return;
+    ws.send(msg.value);
+    msg.value = "";
+    msg.focus();
+  };
+  fechar.onclick = () => ws.close();
+  reconectar.onclick = conectar;
+  conectar();
+</script>
+</body>
 </html>
