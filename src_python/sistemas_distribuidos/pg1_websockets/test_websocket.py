@@ -1,4 +1,4 @@
-"""IntegraÃ§Ã£o por HTTP e WebSocket reais, em portas livres."""
+"""Integração por HTTP e WebSocket reais, em portas livres."""
 
 import asyncio
 import logging
@@ -44,9 +44,11 @@ def test_http_pages_and_missing_route():
                 assert status == 200
                 assert content_type == "text/html"
                 assert title in body
+                assert "Distribu\u00eddos" in body
             with pytest.raises(HTTPError) as error:
                 await asyncio.to_thread(fetch, f"http://{address}/inexistente")
             assert error.value.code == 404
+            error.value.close()
     asyncio.run(scenario())
 
 
@@ -58,8 +60,8 @@ def test_echo_isolated_from_other_echo_and_chat():
                 connect(f"ws://{address}/echo", proxy=None) as other,
                 connect(f"ws://{address}/chat", proxy=None) as chat,
             ):
-                await sender.send("OlÃ¡, aÃ§Ã£o! ðŸŒŽ")
-                assert await receive(sender) == "OlÃ¡, aÃ§Ã£o! ðŸŒŽ"
+                await sender.send("Olá, ação! 🌎")
+                assert await receive(sender) == "Olá, ação! 🌎"
                 for client in (other, chat):
                     with pytest.raises(TimeoutError):
                         await asyncio.wait_for(client.recv(), timeout=0.15)
@@ -78,7 +80,7 @@ def test_broadcast_three_clients_disconnect_and_reconnect(caplog):
             ):
                 await wait_sessions(sessions, 3)
                 remote_c = c.local_address
-                for sender, message in ((a, "A: olÃ¡!"), (b, "B: aÃ§Ã£o e comunicaÃ§Ã£o")):
+                for sender, message in ((a, "A: olá!"), (b, "B: ação e comunicação")):
                     await sender.send(message)
                     assert await asyncio.gather(*(receive(x) for x in (a, b, c))) == [message] * 3
                 await c.close()
@@ -107,8 +109,8 @@ def test_abrupt_disconnect_does_not_break_broadcast():
             ):
                 await wait_sessions(sessions, 3)
                 c.transport.abort()
-                await a.send("Servidor continua disponÃ­vel")
-                assert await receive(a) == await receive(b) == "Servidor continua disponÃ­vel"
+                await a.send("Servidor continua disponível")
+                assert await receive(a) == await receive(b) == "Servidor continua disponível"
                 await wait_sessions(sessions, 2)
     asyncio.run(scenario())
 

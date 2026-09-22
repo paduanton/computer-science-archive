@@ -99,5 +99,5 @@ def test_invalid_numeric_values(calculator_client, method, rpc_request):
     with pytest.raises(grpc.RpcError) as error:
         getattr(calculator_client, method)(rpc_request, timeout=3)
     assert error.value.code() == grpc.StatusCode.INVALID_ARGUMENT
-    # Um erro de argumento nÃ£o deve encerrar o servidor.
+    # Um erro de argumento não deve encerrar o servidor.
     assert calculator_client.Sum(messages.SumRequest(a=1, b=2), timeout=3).s == 3

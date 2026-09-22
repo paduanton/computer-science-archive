@@ -1,4 +1,4 @@
-"""Calculadora gRPC derivada da implementaÃ§Ã£o-base da disciplina."""
+"""Calculadora gRPC derivada da implementação-base da disciplina."""
 
 import argparse
 import logging
@@ -44,7 +44,7 @@ class Calculator(CalculatorServicer):
         dividend, divisor = request.dividend, request.divisor
         require_finite(context, dividend, divisor)
         if divisor == 0:
-            context.abort(grpc.StatusCode.INVALID_ARGUMENT, "O divisor nÃ£o pode ser zero.")
+            context.abort(grpc.StatusCode.INVALID_ARGUMENT, "O divisor não pode ser zero.")
         ratio = dividend / divisor
         require_finite(context, ratio)
         quotient = math.trunc(ratio)
@@ -59,11 +59,11 @@ class Calculator(CalculatorServicer):
 def create_server(host="127.0.0.1", port=50051):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     add_CalculatorServicer_to_server(Calculator(), server)
-    # Portas dinÃ¢micas nos testes; endereÃ§o concreto do cliente, nunca [::].
+    # Portas dinâmicas nos testes; endereço concreto do cliente, nunca [::].
     address = f"[{host}]:{port}" if ":" in host else f"{host}:{port}"
     bound_port = server.add_insecure_port(address)
     if not bound_port:
-        raise OSError(f"NÃ£o foi possÃ­vel escutar em {address}")
+        raise OSError(f"Não foi possível escutar em {address}")
     return server, bound_port
 
 

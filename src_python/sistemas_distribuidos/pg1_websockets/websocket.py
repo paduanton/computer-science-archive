@@ -1,4 +1,4 @@
-"""Echo e chat derivados da implementaÃ§Ã£o-base PG1-WS da disciplina."""
+"""Echo e chat derivados da implementação-base PG1-WS da disciplina."""
 
 import argparse
 import asyncio
@@ -28,7 +28,7 @@ def http_handler(connection, request):
         return response
     if request.headers.get("Upgrade", "").lower() == "websocket":
         return None
-    return connection.respond(HTTPStatus.NOT_FOUND, "PÃ¡gina nÃ£o encontrada.\n")
+    return connection.respond(HTTPStatus.NOT_FOUND, "Página não encontrada.\n")
 
 
 async def echo(websocket):
@@ -45,20 +45,20 @@ async def echo(websocket):
 
 
 async def chat(websocket, sessions={}):
-    # Assinatura solicitada pelo roteiro. create_server passa um dict prÃ³prio
-    # explicitamente, evitando compartilhar o valor padrÃ£o entre servidores.
+    # Assinatura solicitada pelo roteiro. create_server passa um dict próprio
+    # explicitamente, evitando compartilhar o valor padrão entre servidores.
     remote = websocket.remote_address
     sessions[remote] = websocket
     LOGGER.info("Conectou chat cliente=%s ativos=%d", remote, len(sessions))
     try:
         async for message in websocket:
             LOGGER.info("Mensagem chat cliente=%s texto=%r", remote, message)
-            # A sessÃ£o pode ser removida durante um await; itere uma cÃ³pia.
+            # A sessão pode ser removida durante um await; itere uma cópia.
             for socket in list(sessions.values()):
                 try:
                     await socket.send(message)
                 except ConnectionClosed:
-                    # O finally do handler desse cliente remove sua sessÃ£o.
+                    # O finally do handler desse cliente remove sua sessão.
                     continue
     except ConnectionClosed:
         pass
@@ -79,7 +79,7 @@ async def web_socket_router(websocket, sessions):
 
 
 def create_server(host="127.0.0.1", port=8080, sessions=None):
-    """Uma tabela de sessÃµes por servidor; port=0 permite testes sem colisÃ£o."""
+    """Uma tabela de sessões por servidor; port=0 permite testes sem colisão."""
     if sessions is None:
         sessions = {}
 

@@ -1,4 +1,4 @@
-"""Cliente de terminal para as quatro operaÃ§Ãµes da calculadora."""
+"""Cliente de terminal para as quatro operações da calculadora."""
 
 import argparse
 
@@ -28,12 +28,12 @@ def execute(stub, operation, values):
 
 def main():
     parser = argparse.ArgumentParser(description="Cliente da calculadora gRPC")
-    parser.add_argument("--target", default="127.0.0.1:50051", help="endereÃ§o:porta do servidor")
+    parser.add_argument("--target", default="127.0.0.1:50051", help="endereço:porta do servidor")
     commands = parser.add_subparsers(dest="operation", required=True)
     for name, count in (("sum", 2), ("multiply", 2), ("maximum", 3), ("divide", 2)):
         command = commands.add_parser(name)
         command.add_argument("values", type=float, nargs=count)
-    commands.add_parser("demo", help="executar as quatro operaÃ§Ãµes com entradas conhecidas")
+    commands.add_parser("demo", help="executar as quatro operações com entradas conhecidas")
     args = parser.parse_args()
     examples = [
         ("sum", [256.5, 128.8]),

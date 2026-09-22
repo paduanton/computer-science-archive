@@ -21,7 +21,7 @@
 <body>
 <main>
   <h1>Echo com WebSockets</h1>
-  <p>Cada mensagem enviada retorna somente para esta conexÃ£o.</p>
+  <p>Cada mensagem enviada retorna somente para esta conexão.</p>
   <p>Estado: <span id="status" role="status">Conectando...</span></p>
   <form id="form">
     <label for="msg">Mensagem</label>
@@ -32,7 +32,7 @@
   </form>
   <h2>Mensagens recebidas</h2>
   <ul id="area" aria-live="polite"></ul>
-  <small>PG1 Â· Sistemas DistribuÃ­dos Â· <a href="/ui-chat">Abrir chat</a></small>
+  <small>PG1 · Sistemas Distribuídos · <a href="/ui-chat">Abrir chat</a></small>
 </main>
 <script>
   const area = document.getElementById("area");
@@ -63,7 +63,7 @@
       enviar.disabled = fechar.disabled = true;
       reconectar.disabled = false;
     };
-    ws.onerror = () => { status.textContent = "Falha na conexÃ£o. Verifique o servidor."; };
+    ws.onerror = () => { status.textContent = "Falha na conexão. Verifique o servidor."; };
   }
   document.getElementById("form").onsubmit = (event) => {
     event.preventDefault();
