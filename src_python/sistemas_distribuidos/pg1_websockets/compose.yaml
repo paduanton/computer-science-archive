@@ -1,0 +1,14 @@
+x-app: &app
+  build: .
+  image: sd-pg1-websockets:local
+  init: true
+
+services:
+  servidor:
+    <<: *app
+    ports:
+      - "127.0.0.1:${PORTA_HOST:-8080}:8080"
+  testes:
+    <<: *app
+    profiles: ["ferramentas"]
+    command: ["python", "-m", "pytest", "-v"]
