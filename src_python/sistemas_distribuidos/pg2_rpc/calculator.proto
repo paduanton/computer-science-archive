@@ -9,6 +9,38 @@ message SumReply {
   double s = 1;
 }
 
+message MultiplyRequest {
+  double a = 1;
+  double b = 2;
+}
+
+message MultiplyReply {
+  double product = 1;
+}
+
+message MaximumRequest {
+  double a = 1;
+  double b = 2;
+  double c = 3;
+}
+
+message MaximumReply {
+  double maximum = 1;
+}
+
+message DivideRequest {
+  double dividend = 1;
+  double divisor = 2;
+}
+
+message DivideReply {
+  int64 quotient = 1;
+  double remainder = 2;
+}
+
 service Calculator {
   rpc Sum (SumRequest) returns (SumReply);
+  rpc Multiply (MultiplyRequest) returns (MultiplyReply);
+  rpc Maximum (MaximumRequest) returns (MaximumReply);
+  rpc Divide (DivideRequest) returns (DivideReply);
 }
