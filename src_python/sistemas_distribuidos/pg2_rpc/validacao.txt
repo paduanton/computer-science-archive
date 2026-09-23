@@ -1,0 +1,52 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0 -- /usr/local/bin/python
+cachedir: .pytest_cache
+rootdir: /entrega
+configfile: pytest.ini
+plugins: timeout-2.4.0
+timeout: 15.0s
+timeout method: signal
+timeout func_only: False
+collecting ... collected 38 items
+
+calculator_integration_test.py::test_sum[256.5-128.8-385.3] PASSED       [  2%]
+calculator_integration_test.py::test_sum[0-0-0] PASSED                   [  5%]
+calculator_integration_test.py::test_sum[-3--4--7] PASSED                [  7%]
+calculator_integration_test.py::test_sum[-2-5-3] PASSED                  [ 10%]
+calculator_integration_test.py::test_sum[0.1-0.2-0.3] PASSED             [ 13%]
+calculator_integration_test.py::test_multiply[6-7-42] PASSED             [ 15%]
+calculator_integration_test.py::test_multiply[0-20-0] PASSED             [ 18%]
+calculator_integration_test.py::test_multiply[-3-4--12] PASSED           [ 21%]
+calculator_integration_test.py::test_multiply[-2--5-10] PASSED           [ 23%]
+calculator_integration_test.py::test_multiply[2.5-1.2-3] PASSED          [ 26%]
+calculator_integration_test.py::test_maximum[9-2-3-9] PASSED             [ 28%]
+calculator_integration_test.py::test_maximum[1-9-3-9] PASSED             [ 31%]
+calculator_integration_test.py::test_maximum[1-2-9-9] PASSED             [ 34%]
+calculator_integration_test.py::test_maximum[5-5-2-5] PASSED             [ 36%]
+calculator_integration_test.py::test_maximum[-8--2--5--2] PASSED         [ 39%]
+calculator_integration_test.py::test_maximum[0-0-0-0] PASSED             [ 42%]
+calculator_integration_test.py::test_maximum[1.5-1.6-1.55-1.6] PASSED    [ 44%]
+calculator_integration_test.py::test_divide[20-5-4-0] PASSED             [ 47%]
+calculator_integration_test.py::test_divide[17-5-3-2] PASSED             [ 50%]
+calculator_integration_test.py::test_divide[0-5-0-0] PASSED              [ 52%]
+calculator_integration_test.py::test_divide[-17-5--3--2] PASSED          [ 55%]
+calculator_integration_test.py::test_divide[17--5--3-2] PASSED           [ 57%]
+calculator_integration_test.py::test_divide[-17--5-3--2] PASSED          [ 60%]
+calculator_integration_test.py::test_divide[7.5-2-3-1.5] PASSED          [ 63%]
+calculator_integration_test.py::test_divide[0.5-2-0-0.5] PASSED          [ 65%]
+calculator_integration_test.py::test_divide[-9223372036854775808-1--9223372036854775808-0] PASSED [ 68%]
+calculator_integration_test.py::test_divide_by_zero[0] PASSED            [ 71%]
+calculator_integration_test.py::test_divide_by_zero[-0.0] PASSED         [ 73%]
+calculator_integration_test.py::test_invalid_numeric_values[Sum-SumRequest0] PASSED [ 76%]
+calculator_integration_test.py::test_invalid_numeric_values[Sum-SumRequest1] PASSED [ 78%]
+calculator_integration_test.py::test_invalid_numeric_values[Multiply-MultiplyRequest0] PASSED [ 81%]
+calculator_integration_test.py::test_invalid_numeric_values[Multiply-MultiplyRequest1] PASSED [ 84%]
+calculator_integration_test.py::test_invalid_numeric_values[Maximum-MaximumRequest] PASSED [ 86%]
+calculator_integration_test.py::test_invalid_numeric_values[Divide-DivideRequest0] PASSED [ 89%]
+calculator_integration_test.py::test_invalid_numeric_values[Divide-DivideRequest1] PASSED [ 92%]
+calculator_integration_test.py::test_invalid_numeric_values[Divide-DivideRequest2] PASSED [ 94%]
+calculator_integration_test.py::test_invalid_numeric_values[Divide-DivideRequest3] PASSED [ 97%]
+calculator_integration_test.py::test_invalid_numeric_values[Divide-DivideRequest4] PASSED [100%]
+
+----------------- generated xml file: /entrega/.qa/testes.xml ------------------
+============================== 38 passed in 1.41s ==============================

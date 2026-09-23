@@ -1,0 +1,52 @@
+{
+  "projeto": "pg1_websockets",
+  "titulo": "Laboratório de WebSockets",
+  "esperados": 5,
+  "codigo": [
+    "websocket.py",
+    "chat.html",
+    "echo.html",
+    "test_websocket.py"
+  ],
+  "gerados": [],
+  "imagens": [
+    [
+      "01_ambiente.png",
+      "Ambiente Linux e inicialização do servidor"
+    ],
+    [
+      "02_echo.png",
+      "Mensagem devolvida pelo serviço de echo"
+    ],
+    [
+      "03_broadcast.png",
+      "Broadcast entre duas janelas do navegador e um cliente de terminal"
+    ],
+    [
+      "04_desconexao.png",
+      "Desconexão de um cliente e continuidade dos clientes restantes"
+    ],
+    [
+      "05_testes.png",
+      "Resultado dos testes automatizados"
+    ]
+  ],
+  "objetivo": "Demonstrar comunicação persistente por WebSockets com um servidor Python e clientes de navegador e terminal. A implementação fornece echo e chat, registra sessões e distribui mensagens para todos os clientes conectados.",
+  "implementacao": [
+    "Os clientes HTML são servidos por HTTP em /ui-echo e /ui-chat. Depois de abrir a página, o navegador estabelece uma conexão persistente em /echo ou /chat. O echo devolve a mensagem somente ao remetente; o chat a envia a todas as sessões ativas, inclusive a origem.",
+    "A função async define uma corrotina. Ao executar await numa operação de rede, ela permite que o event loop avance no atendimento de outras conexões. O dicionário sessions usa a tupla IP e porta do cliente, obtida de remote_address, como chave.",
+    "O broadcast percorre uma cópia de sessions.values(). Assim, uma desconexão durante um await não altera o objeto percorrido. Conexões encerradas são tratadas individualmente; finally remove a sessão e os demais clientes continuam ativos. Conexão, mensagem e desconexão geram logs com endereço remoto.",
+    "A assinatura chat(websocket, sessions={}) segue o roteiro. Cada instância do servidor passa seu próprio dicionário explicitamente, evitando dependência do argumento padrão mutável. A manutenção das sessões é em memória e não guarda histórico de mensagens.",
+    "A base foi adaptada à API atual de websockets.asyncio.server. O roteamento usa request.path e o tratamento HTTP recebe connection e request. No enunciado, a URL da demonstração de echo está trocada: a correta é /ui-echo. No Docker, o IP remoto pode refletir o gateway virtual; as portas identificam as conexões distintas."
+  ],
+  "comandos": [
+    "docker compose up --build -d servidor",
+    "http://localhost:8080/ui-echo",
+    "http://localhost:8080/ui-chat",
+    "docker compose exec servidor python -m websockets ws://127.0.0.1:8080/chat",
+    "docker compose run --rm testes",
+    "docker compose logs --tail 30 servidor",
+    "docker compose down"
+  ],
+  "testes": "A suíte abre servidores reais em portas livres e verifica páginas HTTP, caracteres acentuados, isolamento do echo, broadcast para três clientes, desconexão normal e abrupta, remoção de sessões, reconexão e rejeição de rotas inválidas. Os testes incluem tempos limite e encerram os servidores ao terminar."
+}
