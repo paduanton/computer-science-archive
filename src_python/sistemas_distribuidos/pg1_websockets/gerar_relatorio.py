@@ -7,6 +7,7 @@ from datetime import date, datetime
 
 from docx import Document
 from docx.enum.style import WD_STYLE_TYPE
+from docx.enum.section import WD_SECTION, WD_ORIENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
@@ -52,7 +53,7 @@ def main():
     code = doc.styles.add_style("Codigo", WD_STYLE_TYPE.PARAGRAPH)
     code.font.name, code.font.size = "Consolas", Pt(8.5)
     code.paragraph_format.space_after = Pt(0)
-    code.paragraph_format.line_spacing = 1
+    code.paragraph_format.line_spacing = 0.98
     code.paragraph_format.widow_control = False
     doc.core_properties.title = details["titulo"]
     doc.core_properties.author = identity.get("nome", "")
@@ -102,9 +103,14 @@ def main():
             f"com Python {validation['python']}, sem falhas, erros ou testes ignorados. "
             "O registro completo acompanha a entrega em validacao.txt."
         )
-    evidence_heading = doc.add_heading("Evidências de execução", level=1)
-    if any((ROOT / "evidencias" / name).exists() for name, _ in details["imagens"]):
-        evidence_heading.paragraph_format.page_break_before = True
+    doc.add_heading("Evidências de execução", level=1)
+    if details.get("captura"):
+        doc.add_paragraph(details["captura"])
+    has_images = any((ROOT / "evidencias" / name).exists() for name, _ in details["imagens"])
+    if has_images:
+        landscape = doc.add_section(WD_SECTION.NEW_PAGE)
+        landscape.orientation = WD_ORIENT.LANDSCAPE
+        landscape.page_width, landscape.page_height = Cm(29.7), Cm(21)
     for index, (name, caption) in enumerate(details["imagens"], 1):
         image_path = ROOT / "evidencias" / name
         if image_path.exists():
@@ -112,14 +118,18 @@ def main():
             paragraph.paragraph_format.page_break_before = index > 1
             paragraph.paragraph_format.keep_with_next = True
             paragraph.add_run(f"Figura {index}").bold = True
-            figure = doc.add_picture(str(image_path), width=Cm(17))
-            if figure.height > Cm(18):
-                scale = Cm(18) / figure.height
+            figure = doc.add_picture(str(image_path), width=Cm(25))
+            if figure.height > Cm(14.5):
+                scale = Cm(14.5) / figure.height
                 figure.width = int(figure.width * scale)
-                figure.height = Cm(18)
+                figure.height = Cm(14.5)
             doc.add_paragraph(caption, style="Caption")
         else:
             doc.add_paragraph(f"Figura {index}: {caption}. Captura pendente: {name}.")
+    if has_images:
+        portrait = doc.add_section(WD_SECTION.NEW_PAGE)
+        portrait.orientation = WD_ORIENT.PORTRAIT
+        portrait.page_width, portrait.page_height = Cm(21), Cm(29.7)
     doc.add_heading("Referências", level=1)
     reference = ("https://grpc.io/docs/languages/python/" if details["gerados"]
                  else "https://websockets.readthedocs.io/")
