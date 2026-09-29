@@ -12,18 +12,3 @@ services:
     <<: *app
     profiles: ["ferramentas"]
     command: ["python", "-m", "pytest", "-v"]
-  entrega:
-    <<: *app
-    profiles: ["ferramentas"]
-    volumes:
-      - .:/entrega
-    working_dir: /entrega
-    command: ["python", "empacotar.py"]
-  relatorio:
-    build:
-      context: .
-      dockerfile: Dockerfile.relatorio
-    image: sd-relatorios:local
-    profiles: ["ferramentas"]
-    volumes:
-      - .:/app

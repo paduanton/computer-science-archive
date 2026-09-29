@@ -2,7 +2,3 @@
 __pycache__/
 .pytest_cache/
 dist/
-.qa/
-relatorio_rascunho.docx
-identificacao.json
-entrega.json
